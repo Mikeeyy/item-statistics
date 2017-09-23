@@ -1,0 +1,112 @@
+buildscript {
+    ext {
+        springBootVersion = '1.5.6.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath group: 'org.jsonschema2pojo', name: 'jsonschema2pojo-gradle-plugin', version: '0.4.37'
+    }
+}
+
+plugins {
+    id 'net.ltgt.apt' version '0.9'
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'jsonschema2pojo'
+//apply plugin: 'checkstyle'
+apply plugin: 'findbugs'
+
+
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    runtime('com.h2database:h2')
+    compileOnly('org.projectlombok:lombok')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+
+    compile group: 'io.vavr', name: 'vavr', version: '0.9.0'
+    compile group: 'javax.inject', name: 'javax.inject', version: '1'
+    compile group: 'org.jsoup', name: 'jsoup', version: '1.10.3'
+    compile group: 'com.codeborne', name: 'phantomjsdriver', version: '1.2.1'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.6'
+    compile 'org.mapstruct:mapstruct-jdk8:1.2.0.CR2'
+    apt 'org.mapstruct:mapstruct-processor:1.2.0.CR2'
+    apt 'org.projectlombok:lombok'
+    compile group: 'com.puppycrawl.tools', name: 'checkstyle', version: '8.2'
+    compile group: 'com.google.guava', name: 'guava', version: '19.0'
+}
+
+jsonSchema2Pojo {
+    includeAdditionalProperties = false
+    generateBuilders = true
+    usePrimitives = false
+    source = files("${sourceSets.main.output.resourcesDir}/json")
+    targetDirectory = file("${project.buildDir}/generated-sources/js2p")
+    targetPackage = 'com.matejko.generated'
+    propertyWordDelimiters = [] as char[]
+    useLongIntegers = true
+    useBigIntegers = false
+    useDoubleNumbers = true
+    useBigDecimals = false
+    includeHashcodeAndEquals = true
+    includeToString = true
+    annotationStyle = 'jackson'
+    customAnnotator = 'org.jsonschema2pojo.NoopAnnotator'
+    includeJsr303Annotations = false
+    sourceType = 'jsonschema'
+    removeOldOutput = false
+    outputEncoding = 'UTF-8'
+    useJodaDates = false
+    formatDateTimes = true
+    formatDates = true
+    formatTimes = true
+    useCommonsLang3 = true
+    initializeCollections = true
+    classNamePrefix = ""
+    classNameSuffix = ""
+    fileExtensions = [] as String[]
+    includeConstructors = true
+    parcelable = false
+    serializable = true
+    includeAccessors = true
+    includeDynamicAccessors = false
+    dateType = "java.time.LocalDate"
+    dateTimeType = "java.time.LocalDateTime"
+}
+
+/*checkstyle {
+    configFile = new File("${rootDir.absolutePath}/src/main/resources/config/checkstyle", "checkstyle.xml")
+}*/
+
+compileJava {
+    options.compilerArgs = [
+            '-Amapstruct.defaultComponentModel=jsr330'
+    ]
+}
+
+if (file("${buildDir.absolutePath}/generated/source/apt/main").exists()) {
+    FileCollection collection = files { file("${buildDir.absolutePath}/generated/source/apt/main").listFiles() }
+    collection.each { delete it }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir "${buildDir.absolutePath}/generated/source/apt/main"
+        }
+    }
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {},
+  "id": "http://example.com/example.json",
+  "javaType": "com.matejko.model.generated.Page",
+  "properties": {
+    "currentPage": {
+      "id": "/properties/currentPage",
+      "type": "integer"
+    },
+    "quantity": {
+      "id": "/properties/quantity",
+      "type": "integer"
+    }
+  },
+  "type": "object"
+}
