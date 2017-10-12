@@ -48,7 +48,7 @@ public class OffersCollectorService {
 
     if (page.getQuantity() > 1) {
       final List<CompletableFuture<List<Offer>>> completables = List.ofAll(createUrls(providedUrl, page))
-          .map(Url::new)
+          .map(f -> new Url().withUrl(f))
           .map(Exceptions.uncheckedException(singleOfferCollectorService::collectOffersForUrl))
           .prepend(mainUrlOffers);
 
@@ -58,7 +58,6 @@ public class OffersCollectorService {
     } else {
       return mainUrlOffers;
     }
-
   }
 
   private List<String> createUrls(final Url providedUrl, final Page page) throws NonExistingWebsiteException {

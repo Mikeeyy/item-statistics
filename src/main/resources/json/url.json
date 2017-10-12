@@ -7,6 +7,14 @@
     "url": {
       "id": "/properties/url",
       "type": "string"
+    },
+    "description": {
+      "id": "/properties/description",
+      "type": "string"
+    },
+    "active": {
+      "id": "/properties/active",
+      "type": "boolean"
     }
   },
   "type": "object"

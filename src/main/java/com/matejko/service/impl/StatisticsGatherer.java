@@ -3,6 +3,7 @@ package com.matejko.service.impl;
 import com.matejko.exceptions.Exceptions;
 import com.matejko.mappers.StatisticsMapper;
 import com.matejko.mappers.UrlMapper;
+import com.matejko.model.entity.Statistics;
 import com.matejko.model.entity.Url;
 import com.matejko.model.generated.Offer;
 import com.matejko.repositories.UrlRepository;
@@ -11,6 +12,7 @@ import com.matejko.utils.StatisticsHelper;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vavr.collection.List;
+import java.time.LocalDateTime;
 import java.util.concurrent.CompletableFuture;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -65,7 +67,10 @@ public class StatisticsGatherer {
         .map(Exceptions.uncheckedException(f -> Tuple.of(f._1, f._2.get())))
         .map(f -> Tuple.of(f._1, StatisticsHelper.calculateStatistics(f._2)))
         .map(f -> {
-          f._1.getStatistics().add(statisticsMapper.map(f._2));
+          final Statistics statistics = statisticsMapper.map(f._2);
+          statistics.setCreationDate(LocalDateTime.now());
+          f._1.getStatistics().add(statistics);
+          statistics.setUrl(f._1);
           return f._1;
         })
         .transform(urlRepository::save);

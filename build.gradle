@@ -8,6 +8,7 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath group: 'org.jsonschema2pojo', name: 'jsonschema2pojo-gradle-plugin', version: '0.4.37'
+        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.1.11'
     }
 }
 
@@ -20,8 +21,8 @@ apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'jsonschema2pojo'
 //apply plugin: 'checkstyle'
-apply plugin: 'findbugs'
-
+//apply plugin: 'findbugs'
+apply plugin: "info.solidsoft.pitest"
 
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
@@ -48,6 +49,8 @@ dependencies {
     apt 'org.projectlombok:lombok'
     compile group: 'com.puppycrawl.tools', name: 'checkstyle', version: '8.2'
     compile group: 'com.google.guava', name: 'guava', version: '19.0'
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.7.0'
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.7.0'
 }
 
 jsonSchema2Pojo {
@@ -109,4 +112,10 @@ sourceSets {
             srcDir "${buildDir.absolutePath}/generated/source/apt/main"
         }
     }
+}
+
+pitest {
+    targetClasses = ['com.matejko.*']
+    threads = 4
+    outputFormats = ['XML', 'HTML']
 }

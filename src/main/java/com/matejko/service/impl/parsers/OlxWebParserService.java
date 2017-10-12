@@ -29,7 +29,8 @@ public class OlxWebParserService extends BaseWebParserService {
       final String price = article.select("td[valign=top]").select("p").select("p.price").text();
 
       return new Offer("", offerUrl, pictureUrl, price, title);
-    }));
+    }))
+        .filter(this::revokeEmptyOffers);
   }
 
   @Override

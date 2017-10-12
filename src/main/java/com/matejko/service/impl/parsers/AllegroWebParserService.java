@@ -44,7 +44,8 @@ public class AllegroWebParserService extends BaseWebParserService {
           .select("dl").stream().flatMap(f -> f.children().stream()).collect(Collectors.toList()));
 
       return new Offer(attributes, offerUrl, pictureUrl, price, title);
-    }));
+    }))
+        .filter(this::revokeEmptyOffers);
   }
 
   @Override

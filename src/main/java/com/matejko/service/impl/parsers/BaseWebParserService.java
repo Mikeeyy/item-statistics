@@ -1,9 +1,11 @@
 package com.matejko.service.impl.parsers;
 
+import com.matejko.model.generated.Offer;
 import com.matejko.service.interfaces.parsers.WebParserService;
 import com.matejko.utils.PhantomJsUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Document;
 
 /**
@@ -45,4 +47,8 @@ public abstract class BaseWebParserService implements WebParserService {
   }
 
   protected abstract String queryPageParam();
+
+  boolean revokeEmptyOffers(final Offer offer) {
+    return StringUtils.isNotBlank(offer.getOfferUrl());
+  }
 }

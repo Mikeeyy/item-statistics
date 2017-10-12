@@ -1,5 +1,6 @@
 package com.matejko.converters;
 
+import io.vavr.control.Option;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import javax.persistence.AttributeConverter;
@@ -13,11 +14,11 @@ public class LocalDateTimeAttributeConverter implements AttributeConverter<Local
 
   @Override
   public Timestamp convertToDatabaseColumn(final LocalDateTime locDateTime) {
-    return (locDateTime == null ? null : Timestamp.valueOf(locDateTime));
+    return Option.of(locDateTime).map(Timestamp::valueOf).getOrNull();
   }
 
   @Override
   public LocalDateTime convertToEntityAttribute(final Timestamp sqlTimestamp) {
-    return (sqlTimestamp == null ? null : sqlTimestamp.toLocalDateTime());
+    return Option.of(sqlTimestamp).map(Timestamp::toLocalDateTime).getOrNull();
   }
 }
