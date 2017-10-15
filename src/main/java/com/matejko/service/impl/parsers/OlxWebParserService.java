@@ -48,6 +48,13 @@ public class OlxWebParserService extends BaseWebParserService {
   }
 
   @Override
+  public boolean offersAvailable(final Document document) {
+    final Elements elements = document.select("div.wrapper").select("div.content").select("div.emptynew");
+
+    return elements == null || elements.size() == 0;
+  }
+
+  @Override
   protected String queryPageParam() {
     return "page";
   }

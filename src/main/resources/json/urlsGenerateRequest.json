@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {},
+  "id": "http://example.com/example.json",
+  "javaType": "com.matejko.model.generated.UrlGenerateRequest",
+  "properties": {
+    "url": {
+      "id": "/properties/url",
+      "type": "string"
+    },
+    "description": {
+      "id": "/properties/description",
+      "type": "string"
+    },
+    "yearFrom": {
+      "id": "/properties/yearFrom",
+      "type": "integer"
+    },
+    "yearTo": {
+      "id": "/properties/yearTo",
+      "type": "integer"
+    }
+  },
+  "type": "object"
+}

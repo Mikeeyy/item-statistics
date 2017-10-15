@@ -1,5 +1,7 @@
 package com.matejko.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.matejko.model.generated.Offer;
 import com.matejko.model.generated.Statistics;
 import io.vavr.collection.List;
@@ -70,5 +72,18 @@ public class StatisticsHelper {
               }
             }))
         .flatMap(Option::of);
+  }
+
+  public static String statisticsJson(final List<Offer> offers) {
+    try {
+      return new ObjectMapper()
+          .writeValueAsString(offers.asJava());
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException("Could not create json from offers: " + offers.toString());
+    }
+  }
+
+  public static boolean containsNumber(final String price) {
+    return StringUtils.isNotBlank(price) && price.matches(".*[0-9].*");
   }
 }

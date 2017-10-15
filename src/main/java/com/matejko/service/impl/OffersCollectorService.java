@@ -11,8 +11,8 @@ import com.matejko.utils.CollectionUtils;
 import io.vavr.API;
 import io.vavr.collection.List;
 import java.util.concurrent.CompletableFuture;
-import javax.inject.Inject;
 import javax.inject.Named;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
@@ -21,18 +21,12 @@ import org.springframework.scheduling.annotation.Async;
  * Created by Mikołaj Matejko on 07.09.2017 as part of item-statistics
  */
 @Named
+@RequiredArgsConstructor
 public class OffersCollectorService {
   private static final Logger logger = LoggerFactory.getLogger(OffersCollectorService.class);
 
   private final WebsiteResolverService typeResolverService;
   private final SingleOfferCollectorService singleOfferCollectorService;
-
-  @Inject
-  public OffersCollectorService(final WebsiteResolverService typeResolverService,
-                                final SingleOfferCollectorService singleOfferCollectorService) {
-    this.typeResolverService = typeResolverService;
-    this.singleOfferCollectorService = singleOfferCollectorService;
-  }
 
   /**
    * collecting offers from all pages for given filter url
@@ -47,7 +41,7 @@ public class OffersCollectorService {
     final CompletableFuture<List<Offer>> mainUrlOffers = singleOfferCollectorService.collectOffersForUrl(providedUrl);
 
     if (page.getQuantity() > 1) {
-      final List<CompletableFuture<List<Offer>>> completables = List.ofAll(createUrls(providedUrl, page))
+      final List<CompletableFuture<List<Offer>>> completables = createUrls(providedUrl, page)
           .map(f -> new Url().withUrl(f))
           .map(Exceptions.uncheckedException(singleOfferCollectorService::collectOffersForUrl))
           .prepend(mainUrlOffers);

@@ -21,4 +21,6 @@ public interface WebParserService {
   Page parsePagesQuantity(final Document document);
 
   String createNextPageUrl(final String providedUrl, final Long currentPage);
+
+  boolean offersAvailable(Document document);
 }

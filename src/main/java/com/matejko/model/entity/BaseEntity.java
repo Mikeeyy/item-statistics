@@ -24,4 +24,8 @@ public abstract class BaseEntity {
 
   @Column
   private LocalDateTime modificationDate;
+
+  public void setModified() {
+    this.modificationDate = LocalDateTime.now();
+  }
 }

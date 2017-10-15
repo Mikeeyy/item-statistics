@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,6 +28,14 @@ public class Statistics extends BaseEntity {
   private Double medianPrice;
   private Double lowestPrice;
   private Double highestPrice;
+
+
+  @Lob
+  private String data;
+
+  @Lob
+  private String outliers;
+  private Long outliersQuantity;
 
   @ManyToOne(cascade = CascadeType.ALL)
   private Url url;

@@ -55,6 +55,11 @@ public class AllegroWebParserService extends BaseWebParserService {
     return new Page(Long.valueOf(current), Long.valueOf(quantity));
   }
 
+  @Override
+  public boolean offersAvailable(final Document document) {
+    return true;
+  }
+
   private String parseAttributes(final java.util.List<Element> children) {
     if (children == null || children.isEmpty()) {
       return StringUtils.EMPTY;

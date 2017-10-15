@@ -1,8 +1,10 @@
 package com.matejko.api;
 
 import com.matejko.model.generated.Url;
+import com.matejko.model.generated.UrlGenerateRequest;
 import com.matejko.service.impl.StatisticsGatherer;
 import com.matejko.service.impl.UrlService;
+import io.vavr.collection.List;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -36,5 +38,11 @@ public class CenterController {
   @PostMapping(value = "/url/delete")
   public Url deleteUrl(@RequestParam final String url) {
     return urlService.delete(url);
+  }
+
+  @PostMapping(value = "/generate")
+  public Iterable<Url> generateUrls(@RequestBody java.util.List<UrlGenerateRequest> requests) {
+    return List.ofAll(requests).flatMap(request -> urlService.generateAndSave(request.getDescription(), request.getUrl(),
+        request.getYearFrom().intValue(), request.getYearTo().intValue()));
   }
 }

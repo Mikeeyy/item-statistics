@@ -1,8 +1,10 @@
 package com.matejko.repositories;
 
+import com.matejko.model.common.Status;
 import com.matejko.model.entity.Statistics;
 import com.matejko.model.entity.Url;
 import io.vavr.collection.List;
+import io.vavr.collection.Seq;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -14,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
@@ -21,6 +24,10 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @DataJpaTest
+@TestPropertySource(properties = {
+    "settings.URLS_PER_INVOCATION=999",
+    "settings.MAX_MINUTES_OF_PROCESSING=15"
+})
 public class UrlRepositoryTest {
   @Autowired
   private TestEntityManager em;
@@ -70,12 +77,13 @@ public class UrlRepositoryTest {
     url.setDescription(UUID.randomUUID().toString());
     url.setActive(true);
     url.setCreationDate(LocalDateTime.now());
+    url.setStatus(Status.FREE);
     return url;
   }
 
   @Test
   public void findAllByActiveTrueAndNotCheckedTodayTest() throws Exception {
-    final List<Url> urls = List.ofAll(urlRepository.findAllByActiveTrueAndNotCheckedToday());
+    final Seq<Url> urls = urlRepository.findAllByActiveTrueAndFree();
 
     Assert.assertEquals("number of returned elements should be equal to assumed number of elements",
         shouldBeReturnedIds.size(), urls.size());
